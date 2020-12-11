@@ -3,14 +3,14 @@ FILE_NAME = 'scores.csv'
 
 def get_grade_gpa(score):
     # calculate the gpa for each student 
-    GPA = [
+    marks_sheet = [
         (90, 4.00),
         (80, 3.00),
         (70, 2.00),
         (60, 1.00),
         (00, 0.00)]
 
-    return [point for key, point in GPA if score >= key][0]
+    return [gpa for marks, gpa in marks_sheet if score >= marks][0]
   
 scores = pd.read_csv(FILE_NAME, delimiter=',',header=0, index_col=0)
 print(scores)
