@@ -1,37 +1,47 @@
 import pandas as pd
 FILE_NAME = 'scores.csv'
 
-mean_score_dict = {}
-class_gpa = 0
-avg_class_gpa = 0
+st_grades = ''
+st_gpa = 0.0
+
+def get_student_grades(p_score):
+#calculate gpa based on score
+    if p_score >= 90:
+        st_grades = 'A'
+        st_gpa = 4.0
+    elif p_score >= 80:
+        st_grades = 'B'
+        st_gpa = 3.0
+    elif p_score >= 70:
+        st_grades = 'C'
+        st_gpa = 2.0
+    elif p_score >= 60:
+        st_grades = 'D'
+        st_gpa = 1.0
+    elif p_score < 60:
+        st_grades = 'F'
+        st_gpa = 0.0
+    return st_gpa
 
 #read csv file
-scores = pd.read_csv(FILE_NAME, delimiter=',',header=0, index_col=0)
-print(scores)
+df_scores = pd.read_csv(FILE_NAME, delimiter=',',header=0, index_col=0)
+print(df_scores)
 
-#convert the dataframe to dictionary
-df_csv_dict = scores.to_dict()
+#create dataframe to convert the marks into gpa
+df_student_gpa = df_scores.applymap(get_student_grades)
+print(df_student_gpa)
 
-#calculate gpa and display the class gpa
-for key,values in df_csv_dict.items():
-    total_gpa = 0
-    avg_gpa = 0
-    for subject, marks in values.items():
-        if marks >= 90:
-            gpa = 4.0
-        elif marks >= 80:
-            gpa = 3.0
-        elif marks >= 70:
-            gpa = 2.0
-        elif marks >= 60:
-            gpa = 1.0
-        else:
-            gpa = 0.0
-        total_gpa = total_gpa + gpa
-    avg_gpa = total_gpa/len(values)
-    print(f'{key:<20}  {avg_gpa:.2f}') 
-    class_gpa = class_gpa + avg_gpa
-    avg_class_gpa = class_gpa/len(df_csv_dict)
+#set precision to 2 decimal
+pd.set_option('precision', 2)
 
-print(f'The Class GPA is {avg_class_gpa:.2f}')
+#calculate individual gpa
+student_mean = df_student_gpa.mean(axis = 0)
+print(student_mean)
+
+#calculate and display class gpa
+student_mean = student_mean.transpose()
+class_gpa = student_mean.mean()
+print(f'The class GPA is {class_gpa:.2f}')
+
+
 
